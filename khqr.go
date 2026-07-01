@@ -14,6 +14,9 @@ import (
 
 const crcValueLength = 4
 
+// GenerateIndividual builds a KHQR string for an individual (P2P) recipient.
+// The QR is static if data.Amount is nil, empty, or "0"; otherwise it is a
+// dynamic QR carrying that fixed amount.
 func GenerateIndividual(data models.IndividualInfo) (*models.KHQRData, error) {
 
 	qr, err := generator.NewKHQRGenerator(models.MerchantInfo{
@@ -29,6 +32,10 @@ func GenerateIndividual(data models.IndividualInfo) (*models.KHQRData, error) {
 	}, nil
 }
 
+// GenerateMerchant builds a KHQR string for a merchant. data.MerchantID and
+// data.AcquiringBank are required in addition to the base IndividualInfo
+// fields. As with GenerateIndividual, the QR is dynamic only when data.Amount
+// is set.
 func GenerateMerchant(data models.MerchantInfo) (*models.KHQRData, error) {
 	qr, err := generator.NewKHQRGenerator(data, true).Generate()
 	if err != nil {
@@ -41,11 +48,19 @@ func GenerateMerchant(data models.MerchantInfo) (*models.KHQRData, error) {
 	}, nil
 }
 
+// DecodeKHQR parses khqrString into its component fields. It never returns an
+// error: fields that cannot be parsed are simply left at their zero value. Use
+// DecodeKHQRValidation instead when the input may be malformed, tampered with,
+// or expired.
 func DecodeKHQR(khqrString string) models.DecodedKHQR {
 
 	return decoder.NewDecoder(khqrString).Decode()
 }
 
+// DecodeKHQRValidation decodes khqrString and validates it: the CRC16
+// checksum must match, BakongAccountID and MerchantName must be present, and
+// — for dynamic QRs — a transaction amount must be present and any
+// expiration timestamp must not be in the past.
 func DecodeKHQRValidation(khqrString string) (*models.DecodedKHQR, error) {
 
 	decoded := DecodeKHQR(khqrString)
