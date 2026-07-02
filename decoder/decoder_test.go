@@ -95,6 +95,34 @@ func TestDecode_AdditionalData(t *testing.T) {
 	}
 }
 
+func TestDecode_AdditionalAccInfo(t *testing.T) {
+	additional := tlv(constants.AddAccInfoPaymentType, "01") +
+		tlv(constants.AddAccInfoTxnRef, "REF01") +
+		tlv(constants.AddAccInfoMainAcc, "855123456789") +
+		tlv(constants.AddAccInfoSecondaryAcc, "855987654321") +
+		tlv(constants.AddAccInfoTxnType, "Dual")
+
+	raw := tlv(constants.AdditionalAccountInfoTag, additional)
+
+	decoded := NewDecoder(raw).Decode()
+
+	if decoded.AddAccInfoIdentifier == nil || *decoded.AddAccInfoIdentifier != "01" {
+		t.Errorf("AddAccInfoIdentifier = %v, want %q", decoded.AddAccInfoIdentifier, "01")
+	}
+	if decoded.AddAccInfoPaymentRef == nil || *decoded.AddAccInfoPaymentRef != "REF01" {
+		t.Errorf("AddAccInfoPaymentRef = %v, want %q", decoded.AddAccInfoPaymentRef, "REF01")
+	}
+	if decoded.AddAccInfoMainAcc == nil || *decoded.AddAccInfoMainAcc != "855123456789" {
+		t.Errorf("AddAccInfoMainAcc = %v, want %q", decoded.AddAccInfoMainAcc, "855123456789")
+	}
+	if decoded.AddAccInfoSecondaryAcc == nil || *decoded.AddAccInfoSecondaryAcc != "855987654321" {
+		t.Errorf("AddAccInfoSecondaryAcc = %v, want %q", decoded.AddAccInfoSecondaryAcc, "855987654321")
+	}
+	if decoded.AddAccInfoTxnType == nil || *decoded.AddAccInfoTxnType != "Dual" {
+		t.Errorf("AddAccInfoTxnType = %v, want %q", decoded.AddAccInfoTxnType, "Dual")
+	}
+}
+
 func TestDecode_LanguageTemplate(t *testing.T) {
 	lang := tlv(constants.LanguagePreference, "km") +
 		tlv(constants.MerchantNameAlternateLanguage, "ឈ្មោះ") +

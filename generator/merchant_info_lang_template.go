@@ -16,9 +16,9 @@ func NewMerchantInfoLangTemplate(langPre, merchantNameAltLang, merchantCityAltLa
 		langPre:             langPre,
 		merchantNameAltLang: merchantNameAltLang,
 		merchantInfoLangTemplateBuilder: []KHQRBuilder{
-			newBaseMerchantCode(languagePreCD, langPre),
-			newBaseMerchantCode(merchantNameAltLangCD, merchantNameAltLang),
-			newBaseMerchantCode(merchantCityAltLangCD, merchantCityAltLang),
+			newBaseMerchantCode(languagePreCD, langPre, false),
+			newBaseMerchantCode(merchantNameAltLangCD, merchantNameAltLang, false),
+			newBaseMerchantCode(merchantCityAltLangCD, merchantCityAltLang, false),
 		},
 	}
 }
@@ -33,7 +33,7 @@ func (m *merchantInfoLangTemplate) String() string {
 	return models.NewTagLengthValue(constants.MerchantInformationLanguageTemplate, &sub).ToString()
 }
 
-func (m *merchantInfoLangTemplate) Validate() *constants.ErrorCode {
+func (m *merchantInfoLangTemplate) Validate() error {
 
 	if m.langPre != nil && m.merchantNameAltLang == nil {
 		return &constants.ErrMerchantNameAlternateLanguageRequired

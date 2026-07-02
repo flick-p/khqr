@@ -6,23 +6,18 @@ import (
 )
 
 type additionalAccountInfo struct {
-	mainAcc, secondaryAcc, txnType *string
-	addAccInfoBuilder              []KHQRBuilder
+	addAccInfoBuilder []KHQRBuilder
 }
 
 func NewAdditionalAccInfo(identifier, paymentRef, mainAcc, secondaryAcc, txnType *string) KHQRBuilder {
 
 	return &additionalAccountInfo{
-
-		mainAcc:      mainAcc,
-		secondaryAcc: secondaryAcc,
-		txnType:      txnType,
 		addAccInfoBuilder: []KHQRBuilder{
-			newBaseMerchantCode(addAccInfoIndentifier, identifier),
-			newBaseMerchantCode(addAccInfoTxnRef, paymentRef),
-			newBaseMerchantCode(addAccInfoMainAccCD, mainAcc),
-			newBaseMerchantCode(addAccInfoSecondaryAccCD, secondaryAcc),
-			newBaseMerchantCode(addAccInfoTxnTypeCD, txnType),
+			newBaseMerchantCode(addAccInfoIdentifier, identifier, false),
+			newBaseMerchantCode(addAccInfoTxnRef, paymentRef, false),
+			newBaseMerchantCode(addAccInfoMainAccCD, mainAcc, false),
+			newBaseMerchantCode(addAccInfoSecondaryAccCD, secondaryAcc, false),
+			newBaseMerchantCode(addAccInfoTxnTypeCD, txnType, false),
 		},
 	}
 }
@@ -38,7 +33,7 @@ func (ad *additionalAccountInfo) String() string {
 	return models.NewTagLengthValue(constants.AdditionalAccountInfoTag, &sub).ToString()
 }
 
-func (ad *additionalAccountInfo) Validate() *constants.ErrorCode {
+func (ad *additionalAccountInfo) Validate() error {
 
 	return BatchValidate(ad.addAccInfoBuilder)
 }

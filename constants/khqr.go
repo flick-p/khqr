@@ -53,7 +53,6 @@ const (
 	CurrencyKHR = 116
 
 	// Max lengths
-	MaxKHQRLength                          = 12
 	MaxMerchantNameLength                  = 25
 	MaxBakongAccountLength                 = 32
 	MaxAmountLength                        = 13
@@ -81,7 +80,4 @@ const (
 	MaxPointOfInitMtdLength                = 2
 
 	GlobalMaxLength = 99
-
-	// Txn Type
-	TxnTypeDual = "Dual"
 )

@@ -39,7 +39,7 @@ func (t *transactionAmount) String() string {
 	return models.NewTagLengthValue(transactionAmtCD.Tag, &amount).ToString()
 }
 
-func (t *transactionAmount) Validate() *constants.ErrorCode {
+func (t *transactionAmount) Validate() error {
 
 	if !t.isValidAmount() {
 		return &constants.ErrTransactionAmountInvalid

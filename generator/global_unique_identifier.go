@@ -40,7 +40,7 @@ func NewGlobalUniqueIdentifier(data InitGlobalIdentifier) KHQRBuilder {
 	} else {
 
 		if data.AccountInformation != nil {
-			builder = append(builder, newBaseMerchantCode(accountInformationCD, data.AccountInformation))
+			builder = append(builder, newBaseMerchantCode(accountInformationCD, data.AccountInformation, false))
 		}
 
 		if data.AcquiringBank != nil {
@@ -79,11 +79,11 @@ func (b *bakongAccountID) String() string {
 
 // validate
 
-func (g *globalUniqueIdentifier) Validate() *constants.ErrorCode {
+func (g *globalUniqueIdentifier) Validate() error {
 
 	return BatchValidate(g.guiBuilder)
 }
-func (b *bakongAccountID) Validate() *constants.ErrorCode {
+func (b *bakongAccountID) Validate() error {
 
 	err := newBaseMerchantCode(bakongAccountIDCD, b.value, true).Validate()
 	if err != nil {

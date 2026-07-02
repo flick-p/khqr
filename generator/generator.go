@@ -20,7 +20,7 @@ func NewKHQRGenerator(data models.MerchantInfo, isMerchant bool) *khqrGenerator 
 	}
 }
 
-func (g *khqrGenerator) Generate() (string, *constants.ErrorCode) {
+func (g *khqrGenerator) Generate() (string, error) {
 	var (
 		data            = g.data
 		qrType          = constants.DynamicQR
@@ -56,6 +56,13 @@ func (g *khqrGenerator) Generate() (string, *constants.ErrorCode) {
 			AccountInformation: data.AccountInformation,
 			IsMerchant:         g.isMerchant,
 		}),
+		NewAdditionalAccInfo(
+			data.AddAccInfoIdentifier,
+			data.AddAccInfoPaymentRef,
+			data.AddAccInfoMainAcc,
+			data.AddAccInfoSecondaryAcc,
+			data.AddAccInfoTxnType,
+		),
 		NewMerchantCategoryCode(&merchantCatCode),
 		NewTransactionCurrency(data.Currency),
 		NewTransactionAmount(data.Amount, data.Currency),
@@ -68,13 +75,6 @@ func (g *khqrGenerator) Generate() (string, *constants.ErrorCode) {
 			data.StoreLabel,
 			data.TerminalLabel,
 			data.PurposeOfTransaction,
-		),
-		NewAdditionalAccInfo(
-			data.AddAccInfoIdentifier,
-			data.AddAccInfoPaymentRef,
-			data.AddAccInfoMainAcc,
-			data.AddAccInfoSecondaryAcc,
-			data.AddAccInfoTxnType,
 		),
 		NewMerchantInfoLangTemplate(
 			data.LanguagePreference,

@@ -44,7 +44,7 @@ func (t *timestamp) String() string {
 	return models.NewTagLengthValue(constants.TimestampTag, &sub).ToString()
 }
 
-func (t *timestamp) Validate() *constants.ErrorCode {
+func (t *timestamp) Validate() error {
 
 	if t.expTime == nil {
 		return nil

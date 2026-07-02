@@ -41,8 +41,8 @@ func CalculateCRC16(data string) string {
 
 	crc := uint16(0xFFFF)
 	for _, b := range []byte(data) {
-		tbl_idx := ((crc >> 8) ^ uint16(b)) & 0xFF
-		crc = (crcTable[tbl_idx] ^ (crc << 8)) & 0xFFFF
+		tblIdx := ((crc >> 8) ^ uint16(b)) & 0xFF
+		crc = (crcTable[tblIdx] ^ (crc << 8)) & 0xFFFF
 	}
 
 	finalChecksum := crc & 0xFFFF

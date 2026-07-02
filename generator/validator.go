@@ -11,7 +11,3 @@ func ValidateLength(khqrCode KHQRCodeDict, value *string) *constants.ErrorCode {
 
 	return nil
 }
-
-func IsValidRequiredStrValue(v *string) bool {
-	return !(v == nil || *v == "")
-}

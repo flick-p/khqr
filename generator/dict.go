@@ -34,10 +34,9 @@ var (
 	unionPayMerchantCD    = KHQRCodeDict{Tag: constants.UnionpayMerchantAccount, MaxLength: constants.MaxUPIMerchantLength, ErrInvalidLength: constants.ErrUPIAccountInformationLengthInvalid}
 
 	// TODO: might need to define max length later
-	addAccInfoIndentifier = KHQRCodeDict{constants.AddAccInfoPaymentType, constants.GlobalMaxLength, constants.ErrInvalidLength, nil}
-	addAccInfoTxnRef      = KHQRCodeDict{constants.AddAccInfoTxnRef, constants.GlobalMaxLength, constants.ErrInvalidLength, nil}
-
-	addAccInfoMainAccCD      = KHQRCodeDict{constants.AddAccInfoMainAcc, constants.GlobalMaxLength, constants.ErrInvalidLength, nil}
-	addAccInfoSecondaryAccCD = KHQRCodeDict{constants.AddAccInfoSecondaryAcc, constants.GlobalMaxLength, constants.ErrInvalidLength, nil}
-	addAccInfoTxnTypeCD      = KHQRCodeDict{constants.AddAccInfoTxnType, constants.GlobalMaxLength, constants.ErrInvalidLength, nil}
+	addAccInfoIdentifier     = KHQRCodeDict{Tag: constants.AddAccInfoPaymentType, MaxLength: constants.GlobalMaxLength, ErrInvalidLength: constants.ErrInvalidLength}
+	addAccInfoTxnRef         = KHQRCodeDict{Tag: constants.AddAccInfoTxnRef, MaxLength: constants.GlobalMaxLength, ErrInvalidLength: constants.ErrInvalidLength}
+	addAccInfoMainAccCD      = KHQRCodeDict{Tag: constants.AddAccInfoMainAcc, MaxLength: constants.GlobalMaxLength, ErrInvalidLength: constants.ErrInvalidLength}
+	addAccInfoSecondaryAccCD = KHQRCodeDict{Tag: constants.AddAccInfoSecondaryAcc, MaxLength: constants.GlobalMaxLength, ErrInvalidLength: constants.ErrInvalidLength}
+	addAccInfoTxnTypeCD      = KHQRCodeDict{Tag: constants.AddAccInfoTxnType, MaxLength: constants.GlobalMaxLength, ErrInvalidLength: constants.ErrInvalidLength}
 )

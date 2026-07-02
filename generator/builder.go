@@ -2,13 +2,11 @@ package generator
 
 import (
 	"strings"
-
-	"khqr/constants"
 )
 
 type KHQRBuilder interface {
 	String() string
-	Validate() *constants.ErrorCode
+	Validate() error
 }
 
 func BatchStringify(v []KHQRBuilder) string {
@@ -21,7 +19,7 @@ func BatchStringify(v []KHQRBuilder) string {
 	return out.String()
 }
 
-func BatchValidate(v []KHQRBuilder) *constants.ErrorCode {
+func BatchValidate(v []KHQRBuilder) error {
 
 	for i := range v {
 		err := v[i].Validate()
