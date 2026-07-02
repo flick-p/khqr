@@ -13,7 +13,7 @@ func NewAdditionalAccInfo(identifier, paymentRef, mainAcc, secondaryAcc, txnType
 
 	return &additionalAccountInfo{
 		addAccInfoBuilder: []KHQRBuilder{
-			newBaseMerchantCode(addAccInfoIndentifier, identifier, false),
+			newBaseMerchantCode(addAccInfoIdentifier, identifier, false),
 			newBaseMerchantCode(addAccInfoTxnRef, paymentRef, false),
 			newBaseMerchantCode(addAccInfoMainAccCD, mainAcc, false),
 			newBaseMerchantCode(addAccInfoSecondaryAccCD, secondaryAcc, false),
