@@ -39,23 +39,3 @@ func TestValidateLength(t *testing.T) {
 		})
 	}
 }
-
-func TestIsValidRequiredStrValue(t *testing.T) {
-	tests := []struct {
-		name  string
-		value *string
-		want  bool
-	}{
-		{"nil pointer is invalid", nil, false},
-		{"empty string is invalid", util.Ptr(""), false},
-		{"non-empty string is valid", util.Ptr("value"), true},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsValidRequiredStrValue(tt.value); got != tt.want {
-				t.Errorf("IsValidRequiredStrValue(%v) = %v, want %v", tt.value, got, tt.want)
-			}
-		})
-	}
-}

@@ -20,7 +20,7 @@ func NewKHQRGenerator(data models.MerchantInfo, isMerchant bool) *khqrGenerator 
 	}
 }
 
-func (g *khqrGenerator) Generate() (string, *constants.ErrorCode) {
+func (g *khqrGenerator) Generate() (string, error) {
 	var (
 		data            = g.data
 		qrType          = constants.DynamicQR

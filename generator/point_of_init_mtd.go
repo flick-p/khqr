@@ -21,10 +21,9 @@ func (p *pointOfInitMtd) String() string {
 	return models.NewTagLengthValue(pointInitMtdCD.Tag, p.value).ToString()
 }
 
-func (p *pointOfInitMtd) Validate() *constants.ErrorCode {
+func (p *pointOfInitMtd) Validate() error {
 
-	err := ValidateLength(pointInitMtdCD, p.value)
-	if err != nil {
+	if err := ValidateLength(pointInitMtdCD, p.value); err != nil {
 		return err
 	}
 

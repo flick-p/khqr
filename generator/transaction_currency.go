@@ -23,7 +23,7 @@ func (c *transactionCurrency) String() string {
 	return models.NewTagLengthValue(transactionCurrencyCD.Tag, util.Ptr(strconv.Itoa(c.value))).ToString()
 }
 
-func (c *transactionCurrency) Validate() *constants.ErrorCode {
+func (c *transactionCurrency) Validate() error {
 
 	if c.value == 0 {
 		return &constants.ErrCurrencyTypeRequired

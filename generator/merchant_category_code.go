@@ -22,7 +22,7 @@ func (m *merchantCategoryCode) String() string {
 	return models.NewTagLengthValue(merchantCatCodeCD.Tag, m.value).ToString()
 }
 
-func (m *merchantCategoryCode) Validate() *constants.ErrorCode {
+func (m *merchantCategoryCode) Validate() error {
 
 	err := newBaseMerchantCode(merchantCatCodeCD, m.value, true).Validate()
 	if err != nil {

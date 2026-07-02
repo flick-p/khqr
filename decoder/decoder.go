@@ -19,20 +19,33 @@ func NewDecoder(khqr string) *decoder {
 	}
 }
 
-func (d *decoder) Decode() models.DecodedKHQR {
-	remaining := d.khqr
-
-	merchantType := constants.MerchantAccountInformationIndividual
-	var lastTag string
+// forEachTLV walks value as a sequence of tag-length-value fields, invoking fn
+// for each one. It stops at the first malformed field, or as soon as fn
+// returns false.
+func forEachTLV(value string, fn func(tag, val string) bool) {
+	remaining := value
 
 	for len(remaining) > 0 {
-		tag, value, newRemaining, err := util.CutString(remaining)
+		tag, val, newRemaining, err := util.CutString(remaining)
 		if err != nil {
 			break
 		}
 
-		if tag == lastTag {
+		if !fn(tag, val) {
 			break
+		}
+
+		remaining = newRemaining
+	}
+}
+
+func (d *decoder) Decode() models.DecodedKHQR {
+	merchantType := constants.MerchantAccountInformationIndividual
+	var lastTag string
+
+	forEachTLV(d.khqr, func(tag, value string) bool {
+		if tag == lastTag {
+			return false
 		}
 
 		// Handle merchant vs individual
@@ -69,8 +82,7 @@ func (d *decoder) Decode() models.DecodedKHQR {
 			d.decodeAdditionalData(value)
 
 		case constants.AdditionalAccountInfoTag:
-
-			d.decodeAddtionalAccInfo(value)
+			d.decodeAdditionalAccInfo(value)
 
 		case constants.MerchantInformationLanguageTemplate:
 			d.decodeLanguageTemplate(value)
@@ -82,9 +94,9 @@ func (d *decoder) Decode() models.DecodedKHQR {
 			d.decoded.CRC = value
 		}
 
-		remaining = newRemaining
 		lastTag = tag
-	}
+		return true
+	})
 
 	d.decoded.MerchantType = merchantType
 
@@ -92,14 +104,7 @@ func (d *decoder) Decode() models.DecodedKHQR {
 }
 
 func (d *decoder) decodeGlobalUniqueIdentifier(value string, isMerchant bool) {
-	remaining := value
-
-	for len(remaining) > 0 {
-		tag, val, newRemaining, err := util.CutString(remaining)
-		if err != nil {
-			break
-		}
-
+	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
 		case constants.BakongAccountIdentifier:
 			d.decoded.BakongAccountID = val
@@ -112,20 +117,12 @@ func (d *decoder) decodeGlobalUniqueIdentifier(value string, isMerchant bool) {
 		case constants.MerchantAccountInformationAcquiringBank:
 			d.decoded.AcquiringBank = &val
 		}
-
-		remaining = newRemaining
-	}
+		return true
+	})
 }
 
 func (d *decoder) decodeAdditionalData(value string) {
-	remaining := value
-
-	for len(remaining) > 0 {
-		tag, val, newRemaining, err := util.CutString(remaining)
-		if err != nil {
-			break
-		}
-
+	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
 		case constants.BillNumberTag:
 			d.decoded.BillNumber = &val
@@ -138,22 +135,12 @@ func (d *decoder) decodeAdditionalData(value string) {
 		case constants.PurposeOfTransactionTag:
 			d.decoded.PurposeOfTransaction = &val
 		}
-
-		remaining = newRemaining
-	}
-
+		return true
+	})
 }
 
-func (d *decoder) decodeAddtionalAccInfo(value string) {
-
-	remaining := value
-
-	for len(remaining) > 0 {
-		tag, val, newRemaining, err := util.CutString(remaining)
-		if err != nil {
-			break
-		}
-
+func (d *decoder) decodeAdditionalAccInfo(value string) {
+	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
 		case constants.AddAccInfoMainAcc:
 			d.decoded.AddAccInfoMainAcc = &val
@@ -162,20 +149,12 @@ func (d *decoder) decodeAddtionalAccInfo(value string) {
 		case constants.AddAccInfoTxnType:
 			d.decoded.AddAccInfoTxnType = &val
 		}
-
-		remaining = newRemaining
-	}
+		return true
+	})
 }
 
 func (d *decoder) decodeLanguageTemplate(value string) {
-	remaining := value
-
-	for len(remaining) > 0 {
-		tag, val, newRemaining, err := util.CutString(remaining)
-		if err != nil {
-			break
-		}
-
+	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
 		case constants.LanguagePreference:
 			d.decoded.LanguagePreference = &val
@@ -184,21 +163,12 @@ func (d *decoder) decodeLanguageTemplate(value string) {
 		case constants.MerchantCityAlternateLanguage:
 			d.decoded.MerchantCityAlternateLanguage = &val
 		}
-
-		remaining = newRemaining
-	}
-
+		return true
+	})
 }
 
-func (d *decoder) decodeTimestamp(value string) error {
-	remaining := value
-
-	for len(remaining) > 0 {
-		tag, val, newRemaining, err := util.CutString(remaining)
-		if err != nil {
-			break
-		}
-
+func (d *decoder) decodeTimestamp(value string) {
+	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
 		case constants.CreationTimestamp:
 			if timestamp, err := strconv.ParseInt(val, 10, 64); err == nil {
@@ -209,9 +179,6 @@ func (d *decoder) decodeTimestamp(value string) error {
 				d.decoded.ExpirationTimestamp = &timestamp
 			}
 		}
-
-		remaining = newRemaining
-	}
-
-	return nil
+		return true
+	})
 }

@@ -1,7 +1,6 @@
 package generator
 
 import (
-	"khqr/constants"
 	"khqr/models"
 )
 
@@ -13,13 +12,7 @@ type baseMerchantCode struct {
 	isRequiredValidate bool
 }
 
-func newBaseMerchantCode(code KHQRCodeDict, v *string, isValidateRequiredInput ...bool) KHQRBuilder {
-
-	var isRequiredValidate bool
-
-	if len(isValidateRequiredInput) > 0 {
-		isRequiredValidate = isValidateRequiredInput[0]
-	}
+func newBaseMerchantCode(code KHQRCodeDict, v *string, isRequiredValidate bool) KHQRBuilder {
 
 	return &baseMerchantCode{
 		code:               code,
@@ -35,11 +28,15 @@ func (b *baseMerchantCode) String() string {
 
 // validation
 
-func (b *baseMerchantCode) Validate() *constants.ErrorCode {
+func (b *baseMerchantCode) Validate() error {
 
 	if b.isRequiredValidate && b.value == nil && b.code.ErrRequire != nil {
 		return b.code.ErrRequire
 	}
 
-	return ValidateLength(b.code, b.value)
+	if err := ValidateLength(b.code, b.value); err != nil {
+		return err
+	}
+
+	return nil
 }
