@@ -142,6 +142,10 @@ func (d *decoder) decodeAdditionalData(value string) {
 func (d *decoder) decodeAdditionalAccInfo(value string) {
 	forEachTLV(value, func(tag, val string) bool {
 		switch tag {
+		case constants.AddAccInfoPaymentType:
+			d.decoded.AddAccInfoIdentifier = &val
+		case constants.AddAccInfoTxnRef:
+			d.decoded.AddAccInfoPaymentRef = &val
 		case constants.AddAccInfoMainAcc:
 			d.decoded.AddAccInfoMainAcc = &val
 		case constants.AddAccInfoSecondaryAcc:
