@@ -4,6 +4,10 @@ A Go SDK for generating and decoding **KHQR** codes — the EMVCo-based QR payme
 standard used by Cambodia's National Bank of Cambodia (Bakong) for interoperable
 QR payments.
 
+> **Disclaimer:** This is an unofficial, community-maintained SDK. It is not
+> developed, endorsed, or supported by the National Bank of Cambodia, Bakong,
+> or any affiliated entity.
+
 It supports:
 
 - Generating individual (P2P) and merchant KHQR strings, static or dynamic
